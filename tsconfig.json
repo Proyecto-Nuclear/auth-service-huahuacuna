@@ -1,0 +1,93 @@
+{
+  "compilerOptions": {
+    /* Language and Environment */
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
+    /* Modules */
+    "module": "nodenext",
+    "rootDir": "./src",
+    "moduleResolution": "nodenext",
+    "baseUrl": "./",
+    "paths": {
+      "@application/*": ["src/application/*"],
+      "@application/controllers/*": ["src/application/controllers/*"],
+      "@application/dtos/*": ["src/application/dtos/*"],
+
+      "@domain/*": ["src/domain/*"],
+      "@domain/decorators/*": ["src/domain/decorators/*"],
+      "@domain/entities/*": ["src/domain/entities/*"],
+      "@domain/enums/*": ["src/domain/enums/*"],
+      "@domain/exceptions/*": ["src/domain/exceptions/*"],
+      "@domain/guards/*": ["src/domain/guards/*"],
+      "@domain/helpers/*": ["src/domain/helpers/*"],
+      "@domain/interceptors/*": ["src/domain/interceptors/*"],
+      "@domain/interfaces/*": ["src/domain/interfaces/*"],
+      "@domain/modules/*": ["src/domain/modules/*"],
+      "@domain/pipes/*": ["src/domain/pipes/*"],
+      "@domain/services/*": ["src/domain/services/*"],
+
+      "@infrastructure/*": ["src/infrastructure/*"],
+      "@infrastructure/config/*": ["src/infrastructure/config/*"],
+      "@infrastructure/modules/*": ["src/infrastructure/modules/*"],
+
+      "@test/*": ["__test__/*"],
+      "@test/factories/*": ["__test__/factories/*"],
+      "@test/controllers/*": ["__test__/controllers/*"],
+      "@test/services/*": ["__test__/services/*"],
+      "@test/e2e/*": ["__test__/e2e/*"]
+    },
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+
+    /* Emit */
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./dist",
+    "removeComments": true,
+    "importHelpers": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+
+    /* Interop Constraints */
+    "isolatedModules": true,
+    "allowSynth eticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Type Checking */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": false,
+    "noImplicitThis": true,
+    "useUnknownInCatchVariables": true,
+    "alwaysStrict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "exactOptionalPropertyTypes": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": false,
+
+    /* Completeness */
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true
+  },
+  "include": ["src/**/*", "__test__/**/*"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts",
+    "**/__mocks__/**",
+    "coverage"
+  ]
+}
