@@ -1,0 +1,112 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  PADRINO
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  PENDING_ACTIVATION
+  SUSPENDED
+}
+
+enum AuditAction {
+  USER_CREATED
+  USER_UPDATED
+  USER_DELETED
+  USER_ACTIVATED
+  USER_DEACTIVATED
+  USER_SUSPENDED
+  PASSWORD_RESET
+  EMAIL_VERIFIED
+  LOGIN_SUCCESS
+  LOGIN_FAILED
+  LOGOUT
+  ADMIN_CREATED
+  ADMIN_PERMISSIONS_UPDATED
+}
+
+model User {
+  id                   Int              @id @default(autoincrement())
+  email                String           @unique
+  name                 String
+  password             String
+  role                 Role             @default(PADRINO)
+  status               UserStatus       @default(PENDING_ACTIVATION)
+  phone                String?
+  address              String?
+  documentId           String?          @unique // Document of identity
+  avatar               String?          // Profile picture URL
+  lastLoginAt          DateTime?
+  failedLoginCount     Int              @default(0)
+  lockedUntil          DateTime?
+  resetPasswordToken   String?          @unique
+  resetPasswordExpires DateTime?
+  emailVerified        Boolean          @default(false)
+  emailVerificationToken String?        @unique
+  createdById          Int?             // ID del super-admin que creó este usuario (solo para admins)
+  createdBy            User?            @relation("UserCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdUsers         User[]           @relation("UserCreator")
+  refreshTokens        RefreshToken[]
+  auditLogs            AuditLog[]       @relation("AuditUser")
+  performedAudits      AuditLog[]       @relation("AuditPerformer")
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+  @@index([documentId])
+  @@map("users")
+}
+
+// Modelo para gestión de refresh tokens (JWT)
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  revokedAt DateTime?
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
+
+// Modelo para auditoría de acciones (RF-005)
+model AuditLog {
+  id          Int         @id @default(autoincrement())
+  action      AuditAction
+  userId      Int?        // Usuario afectado por la acción
+  user        User?       @relation("AuditUser", fields: [userId], references: [id], onDelete: SetNull)
+  performedBy Int?        // Usuario que realizó la acción
+  performer   User?       @relation("AuditPerformer", fields: [performedBy], references: [id], onDelete: SetNull)
+  metadata    Json?       // Datos adicionales de la acción (IP, cambios realizados, etc.)
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime    @default(now())
+
+  @@index([userId])
+  @@index([performedBy])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
