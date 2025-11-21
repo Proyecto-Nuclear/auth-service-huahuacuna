@@ -31,6 +31,38 @@
 $ pnpm install
 ```
 
+## Database setup
+
+This project uses Prisma with PostgreSQL. To set up the database and seed it with default users:
+
+1. Ensure `DATABASE_URL` is set in your `.env` file:
+   ```bash
+   DATABASE_URL="postgresql://user:password@localhost:5432/dbname"
+   ```
+
+2. Generate the Prisma client:
+   ```bash
+   $ pnpm prisma generate
+   ```
+
+3. Push the schema to your database (or run migrations):
+   ```bash
+   $ pnpm prisma db push
+   # OR if using migrations:
+   $ pnpm prisma migrate deploy
+   ```
+
+4. Seed the database with default users:
+   ```bash
+   $ pnpm prisma db seed
+   ```
+
+The seed will create two default users for local/dev environments:
+- **ADMIN**: admin@huahuacuna.test / Admin123!
+- **PADRINO**: padrino@huahuacuna.test / Padrino123!
+
+> **Note**: These credentials are for local/dev only. Do not use in production.
+
 ## Compile and run the project
 
 ```bash
