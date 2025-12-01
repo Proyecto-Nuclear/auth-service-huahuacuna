@@ -44,11 +44,12 @@ export class HealthController {
         timestamp: new Date().toISOString(),
       };
     } catch (error) {
-      this.logger.error(`Health check failed: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Health check failed: ${errorMessage}`);
       return {
         status: 'error',
         service: 'auth-service',
-        error: error.message,
+        error: errorMessage,
         timestamp: new Date().toISOString(),
       };
     }

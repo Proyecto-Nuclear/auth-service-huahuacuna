@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { HealthIndicator, HealthIndicatorResult, HealthCheckError } from '@nestjs/terminus';
-import { PrismaService } from '../../auth/prisma.service.js';
+import { Injectable, Logger } from "@nestjs/common";
+import { HealthCheckError, HealthIndicator, HealthIndicatorResult } from "@nestjs/terminus";
+import { PrismaService } from "../../auth/prisma.service.js";
 
 /**
  * Prisma Health Indicator
@@ -20,19 +20,16 @@ export class PrismaHealthIndicator extends HealthIndicator {
    */
   async isHealthy(key: string): Promise<HealthIndicatorResult> {
     try {
-      // Ejecutar query simple para verificar conexión
       await this.prisma.$queryRaw`SELECT 1`;
-
       this.logger.debug('Database health check passed');
-      return this.getStatus(key, true, {
-        message: 'PostgreSQL is healthy',
-      });
+      return this.getStatus(key, true, { message: 'PostgreSQL is healthy' });
     } catch (error) {
-      this.logger.error(`Database health check failed: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      this.logger.error(`Database health check failed: ${errorMessage}`);
       throw new HealthCheckError(
         'Database check failed',
         this.getStatus(key, false, {
-          message: error.message,
+          message: errorMessage,
           timestamp: new Date().toISOString(),
         }),
       );
