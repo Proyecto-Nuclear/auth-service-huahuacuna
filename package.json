@@ -94,5 +94,8 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": []
+  },
+  "prisma": {
+    "seed": "node prisma/seed.cjs"
   }
 }
